@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    # replace with the correct value of the generated certifcate in the AWS console
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "<redacted>"
+    # the backend instances are HTTP/HTTPS/TCP so let Nginx do that
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+    # Map port 443
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+    # Increase the ELB idle timeout to avoid issues with WebSockets or Server-Sent Events.
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: '3600'
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /?(.*)
+            backend:
+              serviceName: client-cluster-ip-service
+              servicePort: 3000
+          - path: /api/?(.*)
+            backend:
+              serviceName: api-cluster-ip-service
+              servicePort: 5000
+          - path: /stream
+            backend:
+              serviceName: api-cluster-ip-service
+              servicePort: 8000

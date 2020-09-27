@@ -1,0 +1,24 @@
+{
+  "main": "src/index.ts",
+  "dependencies": {
+    "express": "4.17.1",
+    "redis": "3.0.2",
+    "pg": "^8.2.1",
+    "cors": "^2.8.5",
+    "websocket": "~1.0.31"
+  },
+  "devDependencies": {
+    "@types/express": "4.17.6",
+    "@types/redis": "2.8.21",
+    "@types/pg": "^7.14.3",
+    "@types/cors": "^2.8.6",
+    "@types/websocket": "^1.0.0",
+    "ts-node": "8.10.1",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.9.3"
+  },
+  "scripts": {
+    "dev": "ts-node-dev --poll --respawn src/index.ts",
+    "build": "npx -p typescript tsc"
+  }
+}
